@@ -1,30 +1,27 @@
 import java.util.List;
 
 public class EnterMLP {
-    private Container  container;
-    private List<Neuron> enterNeurons;
-    private List<Neuron[][]> subsList;
-    private final double E = 0.07;
-    private final double A = 0.03;
+     List<Neuron> enterList;
+    private List<Neuron[][]> prevList;
+    private final double E = 0.00007;
+    private final double A = 0.00003;
 
 
-    public EnterMLP(Container container) {
-        this.container = container;
+    public EnterMLP(List<Neuron> enterList, List<Neuron[][]> prevList) {
+        this.enterList = enterList;
+        this.prevList = prevList;
     }
 
     public void start() {
-        enterNeurons = container.getEnterMLPList();
-        subsList = container.getSubsList();
-
         for (int i = 0; i < 6; i++){
             Neuron prevNeuron;
             Neuron thisNeuron;
             double sum = 0;
             int count = -1;
-            thisNeuron = enterNeurons.get(i);
-            for (int rowC = 0; rowC < subsList.get(i)[0].length; rowC++){
-                for (int columnC = 0; columnC < subsList.get(i).length; columnC++){
-                    prevNeuron = subsList.get(i)[rowC][columnC];
+            thisNeuron = enterList.get(i);
+            for (int rowC = 0; rowC < prevList.get(i)[0].length; rowC++){
+                for (int columnC = 0; columnC < prevList.get(i).length; columnC++){
+                    prevNeuron = prevList.get(i)[rowC][columnC];
                     count++;
                     sum += prevNeuron.getValue() * thisNeuron.getPrevWeight().get(count).getValue();
 
@@ -36,7 +33,7 @@ public class EnterMLP {
                     prevNeuron.getWeightList().set(0, thisNeuron.getPrevWeight().get(count));
                 }
             }
-            enterNeurons.get(i).setValue(MathForCNN.hyperTan(sum));
+            enterList.get(i).setValue(MathForCNN.hyperTan(sum));
         }
 
 //        System.out.println("весы между subs and enter");
@@ -55,7 +52,7 @@ public class EnterMLP {
         double grad = 0;
         double dW = 0;
 
-        for (Neuron enterNeuron: container.getEnterMLPList()){
+        for (Neuron enterNeuron: enterList){
             for (int countWeight = 0; countWeight < 12; countWeight++){
                 sum += enterNeuron.getNeuronNext().get(countWeight).getDelta() * enterNeuron.getWeightList().get(countWeight).getValue();
 

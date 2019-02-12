@@ -1,14 +1,14 @@
 import java.util.List;
 
 public class HiddenLayer {
+    List<Neuron> hiddenList;
 
-    Container container;
+    private final double E = 0.1;
+    private final double A = 0.003;
 
-    private final double E = 0.07;
-    private final double A = 0.03;
 
-    public HiddenLayer(Container container) {
-        this.container = container;
+    public HiddenLayer(List<Neuron> hiddenList) {
+        this.hiddenList = hiddenList;
     }
 
     public void start(){
@@ -16,7 +16,7 @@ public class HiddenLayer {
 //                System.out.println("Лист весов между enter and hidden");
 //        System.out.println(container.getHiddenList().get(0).getPrevWeight());
         int iter = 0;
-        for (Neuron neuronhidden: container.getHiddenList()){
+        for (Neuron neuronhidden: hiddenList){
 
             double sum = 0;
             for (int i = 0; i < neuronhidden.getPrevWeight().size(); i++){
@@ -35,7 +35,7 @@ public class HiddenLayer {
         double gradient = 0;
         double dW = 0;
 
-        for (Neuron hiddenNeuron: container.getHiddenList()){
+        for (Neuron hiddenNeuron: hiddenList){
             delta = MathForCNN.derivativeHyperTan(hiddenNeuron.getValue()) *
                     hiddenNeuron.getWeightList().get(0).getValue()*
                     hiddenNeuron.getNeuronNext().get(0).getDelta();

@@ -5,26 +5,31 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class SplitToRGB {
-    private Container container;
-    private List<Neuron[][]> splitList;
+public class SplitToRGB implements Layer {
+    private List<Neuron[][]> neuronList;
+    private BufferedImage picture;
 
-    private final double E = 0.07;
-    private final double A = 0.03;
+    private final double E = 0.00007;
+    private final double A = 0.00003;
 
-    public SplitToRGB(Container container) {
-        this.container = container;
+    public SplitToRGB(List<Neuron[][]> neuronList) {
+        this.neuronList = neuronList;
     }
 
-    public void start(String name) throws IOException {
-        splitList = container.getSplitList();
+    public void start(String name) {
+        try {
+            picture = ImageIO.read(new File(name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        start();
+    }
 
-        BufferedImage picture = ImageIO.read(new File(name));
+    public void start() {
+
         int pixelR;
         int pixelG;
         int pixelB;
-
-
 
             for (int x = 0; x < picture.getWidth(); x++) {
                 for (int y = 0; y < picture.getHeight(); y++) {
@@ -32,12 +37,12 @@ public class SplitToRGB {
                     pixelR = (rgb & 0xff0000) >> 16;
                     pixelG = (rgb & 0xff00) >> 8;
                     pixelB = rgb & 0xff;
-                    container.getSplitList().get(0)[x][y].setValue((double)pixelR / 255);
-                    container.getSplitList().get(1)[x][y].setValue((double)pixelR / 255);
-                    container.getSplitList().get(2)[x][y].setValue((double)pixelG / 255);
-                    container.getSplitList().get(3)[x][y].setValue((double)pixelG / 255);
-                    container.getSplitList().get(4)[x][y].setValue((double)pixelB / 255);
-                    container.getSplitList().get(5)[x][y].setValue((double)pixelB / 255);
+                    neuronList.get(0)[x][y].setValue((double)pixelR / 255);
+                    neuronList.get(1)[x][y].setValue((double)pixelR / 255);
+                    neuronList.get(2)[x][y].setValue((double)pixelG / 255);
+                    neuronList.get(3)[x][y].setValue((double)pixelG / 255);
+                    neuronList.get(4)[x][y].setValue((double)pixelB / 255);
+                    neuronList.get(5)[x][y].setValue((double)pixelB / 255);
                 }
             }
 
@@ -59,11 +64,14 @@ public class SplitToRGB {
         double sum = 0;
         double gradient = 0;
         double dW = 0;
-        for (Neuron[][] neuronsArr: container.getSplitList()){
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 10; j++) {
+        int matrixSize;
+
+        for (Neuron[][] neuronsArr: neuronList){
+            matrixSize = neuronsArr.length;
+            for (int i = 0; i < matrixSize; i++) {
+                for (int j = 0; j < matrixSize; j++) {
 //
-                    for (int countWeight = 0; countWeight < 9; countWeight++) {
+                    for (int countWeight = 0; countWeight < 25; countWeight++) {
                         sum += neuronsArr[i][j].getWeightList().get(countWeight).getValue() * neuronsArr[i][j].getNeuronNext().get(countWeight).getDelta();
 
                         gradient = neuronsArr[i][j].getNeuronNext().get(countWeight).getDelta() * neuronsArr[i][j].getValue();
@@ -101,5 +109,9 @@ public class SplitToRGB {
 //                }
 //            }
 //        }
+    }
+
+    public List<Neuron[][]> getNeuronList() {
+        return neuronList;
     }
 }

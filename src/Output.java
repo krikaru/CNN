@@ -1,13 +1,11 @@
 public class Output {
-    Container container;
-    Neuron outNeuron;
+     Neuron outNeuron;
 
-    public Output(Container container) {
-        this.container = container;
+    public Output(Neuron outNeuron) {
+        this.outNeuron = outNeuron;
     }
 
     public double start(){
-        outNeuron = container.getOutputNeuron();
         double sum = 0;
 //        System.out.println("Веса между hidden и output:");
 //        System.out.println(outNeuron.getPrevWeight());
