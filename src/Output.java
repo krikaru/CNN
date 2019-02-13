@@ -1,5 +1,5 @@
 public class Output {
-     Neuron outNeuron;
+     private Neuron outNeuron;
 
     public Output(Neuron outNeuron) {
         this.outNeuron = outNeuron;
@@ -7,24 +7,16 @@ public class Output {
 
     public double start(){
         double sum = 0;
-//        System.out.println("Веса между hidden и output:");
-//        System.out.println(outNeuron.getPrevWeight());
         for (int i = 0; i < 24; i++){
             sum += outNeuron.getNeuronPrev().get(i).getValue() * outNeuron.getPrevWeight().get(i).getValue();
-
         }
         outNeuron.setValue(MathForCNN.hyperTan(sum));
-//        System.out.println("outNeuron:");
-//        System.out.println(outNeuron.getValue());
-        double localError = MathForCNN.rse(outNeuron.getValue());
-//        System.out.println("localError = " + localError);
-        return localError;
+
+        return MathForCNN.rse(outNeuron.getValue());
     }
 
     public void editWeight(){
         double d0 = (1 - Math.abs(outNeuron.getValue())) * MathForCNN.derivativeHyperTan(outNeuron.getValue());
         outNeuron.setDelta(d0);
-//        System.out.println("delta out neuron");
-//        System.out.println(d0);
     }
 }

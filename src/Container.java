@@ -30,7 +30,6 @@ public class Container {
 
         //первая пара слоев
         int convSize = initialMatrixSize - kernelSize + 1;
-//        System.out.println(convSize);
         if (isOdd(convSize)){
             containConv(convSize, convList1);
         }else {
@@ -43,8 +42,7 @@ public class Container {
         containWeightAsArr(betweenSubs1AndConv2);
 
         //вторая пара слоев
-        convSize = convSize/2 - kernelSize + 1;
-//        System.out.println(convSize);
+        convSize = convSize / 2 - kernelSize + 1;
 
         if (isOdd(convSize)){
             containConv(convSize, convList2);
@@ -59,7 +57,6 @@ public class Container {
 
         //третья пара слоев
         convSize = convSize/2 - kernelSize + 1;
-//        System.out.println(convSize);
 
         if (isOdd(convSize)){
             containConv(convSize, convList3);
@@ -78,8 +75,6 @@ public class Container {
     private boolean isOdd(int value){
         return value % 2 == 0;
     }
-
-
 
     private void containSplit(int matrixSize){
         for (int count = 0; count < 6; count++){
@@ -131,8 +126,6 @@ public class Container {
         }
     }
 
-    /////////////////////////////////////////////////////////
-
     private void containSubs(int matrixSize, List<Neuron[][]> subsList, boolean beforeMLP){
         for (int count = 0; count < 6; count++) {
             subsList.add(new Neuron[matrixSize][matrixSize]);
@@ -142,7 +135,7 @@ public class Container {
                     subsList.get(count)[i][j] = new Neuron(0);
 
                     if (beforeMLP){
-                        //только один некст нейрон
+                        //only for layer before MLP
                         subsList.get(count)[i][j].getNeuronNext().add(new Neuron(0));
                         subsList.get(count)[i][j].getWeightList().add(new Weight(0));
                     }else {
@@ -152,8 +145,6 @@ public class Container {
                         }
 
                     }
-
-
                 }
             }
         }
@@ -197,7 +188,7 @@ public class Container {
 
 
 
-        //        init in EnterMLP nextNeuron
+        //init in EnterMLP nextNeuron
         for (int count = 0; count < 6; count ++){
             if (count  % 2 == 0){
                 for (int hiddenNeuron = 0; hiddenNeuron < 24; hiddenNeuron = hiddenNeuron + 2){
@@ -275,9 +266,4 @@ public class Container {
     public List<Neuron[][]> getSubsList3() {
         return subsList3;
     }
-
-    public int getKernelSize() {
-        return kernelSize;
-    }
-
 }

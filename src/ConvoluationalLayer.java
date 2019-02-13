@@ -3,9 +3,9 @@ import java.util.List;
 
 public class ConvoluationalLayer implements Layer {
 
-    List<Neuron[][]> convList;
-    List<Weight[][]> kernelsList;
-    List<Neuron[][]> prevList;
+    private List<Neuron[][]> convList;
+    private List<Weight[][]> kernelsList;
+    private List<Neuron[][]> prevList;
 
     public ConvoluationalLayer(List<Neuron[][]> convList, List<Weight[][]> kernelList, List<Neuron[][]> prevList) {
         this.convList = convList;
@@ -19,14 +19,8 @@ public class ConvoluationalLayer implements Layer {
         Weight weight;
         Neuron thisNeuron;
 
-
-//        System.out.println("Массив ядра весов от split до conv(0 ядро):");
-//        System.out.println(Arrays.deepToString(kernelsList.get(0)));
-
         for (int count = 0; count < 6; count++){
-
             kernel = kernelsList.get(count);
-
 
             for (int columnNew = 0; columnNew < prevList.get(count)[0].length - 5 + 1; columnNew++){
                 for (int rowNew = 0; rowNew < prevList.get(count).length - 5 + 1 ; rowNew++){
@@ -43,8 +37,6 @@ public class ConvoluationalLayer implements Layer {
 
                             sum += weight.getValue()* prevNeuron.getValue();
 
-                            //set connection between this and previosly neuron
-//                            System.err.println(prevNeuron.getNeuronNext());;
                             prevNeuron.getNeuronNext().set(kernelCount, thisNeuron);
                             prevNeuron.getWeightList().set(kernelCount, weight);
 
@@ -57,20 +49,9 @@ public class ConvoluationalLayer implements Layer {
                 }
             }
         }
-
-//        System.out.println("Conv:");
-//        System.out.println(Arrays.deepToString(convList.get(0)));
     }
 
     @Override
     public void editWeight(){
-//        System.out.println("------conv.editWeight--------");
-//        System.out.println(Arrays.deepToString(container.getConvList().get(0)));
-
-    }
-
-    @Override
-    public List<Neuron[][]> getNeuronList() {
-        return convList;
     }
 }
